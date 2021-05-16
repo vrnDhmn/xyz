@@ -1,25 +1,27 @@
 /** @component View */
 
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import { VirtualizedList, View, Text } from 'react-native'
-import { ListItem, Avatar, Chip } from 'react-native-elements'
+import { ListItem, Avatar } from 'react-native-elements'
 import TouchableScale from 'react-native-touchable-scale'
 import LinearGradient from 'react-native-linear-gradient'
 
 import { Map, List, fromJS } from 'immutable'
 
 import GetUsers from '../services/service'
-
-class UsersList extends Component {
+import { users } from '../dummy.json'
+class UsersList extends PureComponent {
   constructor(props) {
     super(props)
     this.state = { users: List([]) }
   }
 
   componentDidMount() {
-    GetUsers().then(result => {
-      this.setState({ users: this.state.users.concat(fromJS(result)) })
-    })
+    setTimeout(() => {
+      GetUsers().then(result => {
+        this.setState({ users: this.state.users.concat(fromJS(result)) })
+      })
+    }, 5000)
   }
 
   getItem = (data, index) => data.get(index)
@@ -32,16 +34,14 @@ class UsersList extends Component {
       tension={100} // These props are passed to the parent component (here TouchableScale)
       activeScale={0.95} //
       linearGradientProps={{
-        colors: ['#000', '#708090'],
+        colors: ['#32cd32', '#b0e0e6'],
         start: { x: 1, y: 0 },
         end: { x: 0.2, y: 0 }
       }}
       ViewComponent={LinearGradient}
-      onPress={() => {
-        this.props.onPress(item.toJS())
-      }}
+      onPress={() => {}}
     >
-      <Avatar size="large" rounded source={{ uri: item.get('avatar_url') }} />
+      <Avatar size="large" source={{ uri: item.get('avatar_url') }} />
       <ListItem.Content>
         <ListItem.Title style={{ fontWeight: 'bold' }}>
           {item.get('name')}
@@ -53,40 +53,35 @@ class UsersList extends Component {
             item.get('blog')}
         </ListItem.Subtitle>
       </ListItem.Content>
-      <ListItem.Content right>
-        <Chip
-          title={`${item.get('public_repos')} repos`}
-          type="outline"
-          disabled
-        />
-      </ListItem.Content>
       <ListItem.Chevron />
     </ListItem>
   )
 
   render() {
     return (
-      <VirtualizedList
-        data={this.state.users}
-        renderItem={this.renderItem}
-        keyExtractor={item => {
-          return item.get('id')
+      <View
+        style={{
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: 'pink'
         }}
-        getItemCount={data => {
-          return data.size
-        }}
-        getItem={this.getItem}
       />
     )
+    // return (
+    //   <VirtualizedList
+    //     data={this.state.users}
+    //     initialNumToRender={4}
+    //     renderItem={this.renderItem}
+    //     keyExtractor={item => {
+    //       return item.get('id')
+    //     }}
+    //     getItemCount={data => {
+    //       return data.size
+    //     }}
+    //     getItem={this.getItem}
+    //   />
+    // )
   }
 }
-
-export default function ({ navigation }) {
-  return (
-    <UsersList
-      onPress={user => {
-        navigation.navigate('Details', user)
-      }}
-    />
-  )
-}
+export { UsersList }

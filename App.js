@@ -1,17 +1,10 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
 import 'react-native-gesture-handler'
 
 import React from 'react'
-import type { Node } from 'react'
-import { SafeAreaView, StyleSheet } from 'react-native'
+import { SafeAreaView, StyleSheet, View, Text } from 'react-native'
 
 import UsersList from './components/UsersList'
+import Details from './components/Details'
 import { createStackNavigator } from '@react-navigation/stack'
 import { NavigationContainer } from '@react-navigation/native'
 
@@ -19,18 +12,34 @@ const Stack = createStackNavigator()
 
 function App() {
   return (
-    <NavigationContainer>
-      <SafeAreaView
-        style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
-      >
-        <Stack.Navigator>
-          <Stack.Screen name="Home" component={UsersList} />
+    <SafeAreaView style={{ flex: 1 }}>
+      <NavigationContainer>
+        <Stack.Navigator
+          screenOptions={{
+            headerStyle: {
+              backgroundColor: '#696969'
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+              fontWeight: 'bold'
+            }
+          }}
+          initialRouteName="Home"
+        >
+          <Stack.Screen
+            name="Home"
+            component={UsersList}
+            options={{
+              title: 'XYZ Github'
+              // headerRight: () => search
+            }}
+          />
+          <Stack.Screen name="Details" component={Details} />
         </Stack.Navigator>
-      </SafeAreaView>
-    </NavigationContainer>
+      </NavigationContainer>
+    </SafeAreaView>
   )
 }
-// {/* <Stack.Screen name="Details" component={UserDetails} /> */}
 
 const styles = StyleSheet.create({
   sectionContainer: {
